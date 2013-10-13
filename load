@@ -1,0 +1,18 @@
+#!/usr/bin/bash
+
+mkdir build/disc
+
+dd if=build/bootsector.bin of=build/image.bin 
+dd if=build/secondStage.bin of=build/image.bin seek=1
+
+dd if=/dev/zero of=build/disc.img count=20480
+dd if=build/image.bin of=build/disc.img conv=notrunc
+
+mount build/disc.img build/disc
+cp build/KRNL.SYS build/disc
+
+sleep 0.2
+umount build/disc
+rm -rf build/disc
+rm build/image.bin build/bootsector.bin build/secondStage.bin
+
